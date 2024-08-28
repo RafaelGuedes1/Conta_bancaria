@@ -1,74 +1,110 @@
-README: Sistema de Gerenciamento de Conta Bancária
-Este código é um exemplo de um simples sistema de gerenciamento de conta bancária em Python. O sistema permite ao usuário realizar operações bancárias básicas, incluindo depósitos, saques e a visualização do extrato da conta.
+# Sistema de Gerenciamento de Conta Bancária
 
-Funcionalidade
+Este projeto é um exemplo de um sistema básico de gerenciamento de conta bancária em Python. Ele permite ao usuário realizar operações bancárias essenciais, como depósitos, saques e consulta ao extrato da conta.
+
+## Funcionalidade
+
 O sistema oferece um menu interativo com as seguintes opções:
 
-[d] - Depósito
-[s] - Saque
-[e] - Extrato
-[q] - Sair
-Descrição do Código
-Variáveis Iniciais
-saldo (float): Inicialmente definido como 0. Representa o saldo atual da conta.
-limite (float): Inicialmente definido como 500. Representa o limite máximo para saques.
-extrato (str): Inicialmente uma string vazia. Armazena o histórico das operações realizadas.
-numero_saques (int): Inicialmente definido como 0. Conta o número de saques realizados.
-LIMITE_SAQUES (int): Inicialmente definido como 3. Representa o número máximo de saques permitidos.
-Fluxo do Programa
-Menu de Opções: O menu é exibido continuamente até que o usuário escolha sair.
-Depósito:
-O usuário é solicitado a informar o valor do depósito.
-O valor é adicionado ao saldo e registrado no extrato se for positivo.
-Caso o valor seja inválido (menor ou igual a zero), uma mensagem de erro é exibida.
-Saque:
-O usuário é solicitado a informar o valor do saque.
-O sistema verifica se o valor do saque excede o saldo, o limite ou o número máximo de saques permitidos.
-Se qualquer uma dessas condições for verdadeira, uma mensagem de erro é exibida.
-Caso contrário, o valor é subtraído do saldo e registrado no extrato.
-Se o valor informado for inválido, uma mensagem de erro é exibida.
-Extrato:
-O extrato das operações realizadas é exibido.
-Se nenhuma movimentação foi realizada, uma mensagem informando que não houve movimentações é exibida.
-Sair:
-O loop é interrompido e o programa é encerrado.
-Operação Inválida:
-Se o usuário inserir uma opção que não está no menu, uma mensagem de erro é exibida.
-Como Executar
-Copie o código fornecido para um arquivo Python, por exemplo, banco.py.
-Execute o arquivo Python utilizando um interpretador Python (Python 3.x é recomendado):
-sh
-Copiar código
-python banco.py
-Siga as instruções exibidas no menu para realizar operações bancárias.
-Exemplo de Uso
-plaintext
-Copiar código
+- **[d]** - Depósito
+- **[s]** - Saque
+- **[e]** - Extrato
+- **[q]** - Sair
+
+## Como Funciona
+
+### Variáveis Iniciais
+
+- `saldo` (float): Inicialmente `0`. Representa o saldo atual da conta.
+- `limite` (float): Inicialmente `500`. Limite máximo para saques.
+- `extrato` (str): Inicialmente vazio. Armazena o histórico de operações.
+- `numero_saques` (int): Inicialmente `0`. Conta o número de saques realizados.
+- `LIMITE_SAQUES` (int): Inicialmente `3`. Número máximo de saques permitidos.
+
+### Operações Disponíveis
+
+1. **Depósito** (`d`):
+   - Solicita o valor do depósito.
+   - Adiciona o valor ao saldo e registra no extrato se for positivo.
+   - Exibe mensagem de erro se o valor for inválido.
+
+2. **Saque** (`s`):
+   - Solicita o valor do saque.
+   - Verifica se o valor excede o saldo, o limite ou o número máximo de saques.
+   - Exibe mensagens de erro apropriadas se alguma condição não for atendida.
+   - Registra o saque no extrato se for permitido.
+
+3. **Extrato** (`e`):
+   - Exibe o histórico de operações realizadas.
+   - Se não houver movimentações, exibe mensagem informando a ausência de operações.
+
+4. **Sair** (`q`):
+   - Encerra o programa.
+
+5. **Operação Inválida**:
+   - Exibe mensagem de erro para opções inválidas.
+
+## Código
+
+Aqui está o código principal:
+
+```python
+menu = """
+
 [d]
 [s]
 [e]
 [q]
 
-=> d
-Informe o valor do depósito: 150
-=> s
-Informe o valor do saque: 200
-Operação falhou! O valor do saque excede o limite.
-=> e
+=> """
 
-================EXTRATO================
-Depósito: R$ 150.00
+saldo = 0
+limite = 500
+extrato = ""
+numero_saques = 0
+LIMITE_SAQUES = 3
 
-saldo: R$ 150.00
-==========================================================
-=> q
-Observações
-Certifique-se de fornecer valores numéricos válidos para depósitos e saques.
-O sistema não lida com exceções de entrada, então fornecer valores não numéricos pode causar erros.
-Contribuições
-Contribuições para melhorar o código são bem-vindas. Para sugestões ou melhorias, por favor, entre em contato.
+while True:
+    opcao = input(menu)
 
-Este README cobre a funcionalidade, o fluxo do programa e orientações para executar o código. Se precisar de mais detalhes ou ajustes, sinta-se à vontade para perguntar!
+    if opcao == "d":
+        valor = float(input("Informe o valor do depósito: "))
+        if valor > 0:
+            saldo += valor
+            extrato += f"Depósito: R$ {valor:.2f}\n"
+        else:
+            print("Operação falhou! O valor informado é inválido.")
+
+    elif opcao == "s":
+        valor = float(input("Informe o valor do saque: "))
+        excedeu_saldo = valor > saldo
+        excedeu_limite = valor > limite
+        excedeu_saques = numero_saques >= LIMITE_SAQUES
+        if excedeu_saldo:
+            print("Operação falhou! Você não tem saldo suficiente.")
+        elif excedeu_limite:
+            print("Operação falhou! O valor do saque excede o limite.")
+        elif excedeu_saques:
+            print("Operação falhou! Número máximo de saques excedido.")
+        elif valor > 0:
+            saldo -= valor
+            extrato += f"Saque: R$ {valor:.2f}\n"
+            numero_saques += 1
+        else:
+            print("Operação falhou! O valor informado é inválido.")
+
+    elif opcao == "e":
+        print("\n================EXTRATO================")
+        print("Não foram realizadas movimentações." if not extrato else extrato)
+        print(f"\nsaldo: R$ {saldo:.2f}")
+        print("==========================================================")
+
+    elif opcao == "q":
+        break
+
+    else:
+        print("Operação inválida, por favor selecione novamente a operação desejada.")
+
 
 
 
